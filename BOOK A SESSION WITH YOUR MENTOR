@@ -1,0 +1,312 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Calendar, Clock, Users, CheckCircle, CreditCard, Mail, Book, Tag } from 'lucide-react';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+
+const SessionBooking = () => {
+  const [step, setStep] = useState(1);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
+  const [selectedMentor, setSelectedMentor] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [email, setEmail] = useState("");
+  const [isConfirmed, setIsConfirmed] = useState(false);
+
+  // Data
+  const categories = [
+    { id: 1, name: "Career Guidance", price: 75 },
+    { id: 2, name: "Technical Skills", price: 100 },
+    { id: 3, name: "Leadership", price: 125 },
+    { id: 4, name: "Interview Prep", price: 90 }
+  ];
+
+  const mentors = [
+    { 
+      id: 1, 
+      name: "Dr. Sarah Chen", 
+      expertise: "Machine Learning & AI", 
+      rating: 5,
+      bio: "10+ years experience in AI/ML. Previously led teams at Google and Stanford AI Lab.",
+      specializations: ["Deep Learning", "Computer Vision", "NLP"]
+    },
+    { 
+      id: 2, 
+      name: "John Smith", 
+      expertise: "Web Development", 
+      rating: 4,
+      bio: "Full-stack developer with focus on React and Node.js. Built multiple successful startups.",
+      specializations: ["React", "Node.js", "AWS"]
+    },
+    { 
+      id: 3, 
+      name: "Maria Garcia", 
+      expertise: "Data Science", 
+      rating: 5,
+      bio: "Data scientist specializing in predictive analytics and statistical modeling.",
+      specializations: ["Python", "R", "Statistical Analysis"]
+    }
+  ];
+
+  const timeSlots = [
+    "9:00 AM", "10:00 AM", "11:00 AM", "1:00 PM", "2:00 PM", 
+    "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM"
+  ];
+
+  // Components
+  const MentorCard = ({ mentor, selected, onSelect }) => (
+    <Card 
+      className={`cursor-pointer transition-all ${selected ? 'ring-2 ring-blue-500' : ''}`}
+      onClick={() => onSelect(mentor)}
+    >
+      <CardContent className="p-4">
+        <div className="flex items-center gap-4">
+          <img 
+            src="/api/placeholder/100/100" 
+            alt={mentor.name}
+            className="w-16 h-16 rounded-full object-cover"
+          />
+          <div className="flex-1">
+            <h3 className="font-medium">{mentor.name}</h3>
+            <p className="text-sm text-gray-500">{mentor.expertise}</p>
+            <div className="flex items-center mt-1">
+              {[...Array(5)].map((_, i) => (
+                <span 
+                  key={i} 
+                  className={`text-sm ${i < mentor.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                >
+                  ★
+                </span>
+              ))}
+            </div>
+            <div className="mt-2 flex flex-wrap gap-1">
+              {mentor.specializations.map((spec, index) => (
+                <span 
+                  key={index}
+                  className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full"
+                >
+                  {spec}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  const CategoryCard = ({ category, selected, onSelect }) => (
+    <Card 
+      className={`cursor-pointer transition-all ${selected ? 'ring-2 ring-blue-500' : ''}`}
+      onClick={() => onSelect(category)}
+    >
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-medium">{category.name}</h3>
+            <p className="text-sm text-gray-500">${category.price}/hour</p>
+          </div>
+          <Tag className="w-5 h-5 text-gray-500" />
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  const TimeSlot = ({ time, available, selected, onClick }) => (
+    <Button
+      variant={selected ? "default" : "outline"}
+      className={`w-full ${available ? '' : 'opacity-50 cursor-not-allowed'}`}
+      disabled={!available}
+      onClick={onClick}
+    >
+      {time}
+    </Button>
+  );
+
+  // Steps content
+  const renderStep = () => {
+    switch (step) {
+      case 1:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold">Select a Category</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {categories.map(category => (
+                <CategoryCard
+                  key={category.id}
+                  category={category}
+                  selected={selectedCategory?.id === category.id}
+                  onSelect={setSelectedCategory}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold">Select a Mentor</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              {mentors.map(mentor => (
+                <MentorCard
+                  key={mentor.id}
+                  mentor={mentor}
+                  selected={selectedMentor?.id === mentor.id}
+                  onSelect={setSelectedMentor}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold">Choose Date & Time</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Select Date</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex gap-2">
+                    {["Saturday", "Sunday"].map(day => (
+                      <Button
+                        key={day}
+                        variant={selectedDate === day ? "default" : "outline"}
+                        onClick={() => setSelectedDate(day)}
+                      >
+                        {day}
+                      </Button>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader>
+                  <CardTitle>Select Time</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 gap-2">
+                    {timeSlots.map(time => (
+                      <TimeSlot
+                        key={time}
+                        time={time}
+                        available={Math.random() > 0.3}
+                        selected={selectedTime === time}
+                        onClick={() => setSelectedTime(time)}
+                      />
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold">Review & Pay</h2>
+            <Card>
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <div className="border-b pb-4">
+                    <h3 className="font-medium mb-2">Session Details</h3>
+                    <p className="text-sm">Category: {selectedCategory?.name}</p>
+                    <p className="text-sm">Mentor: {selectedMentor?.name}</p>
+                    <p className="text-sm">Date: {selectedDate}</p>
+                    <p className="text-sm">Time: {selectedTime}</p>
+                  </div>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">Email</label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full p-2 border rounded"
+                        placeholder="your@email.com"
+                      />
+                    </div>
+                    <Button 
+                      className="w-full"
+                      onClick={() => setIsConfirmed(true)}
+                    >
+                      Pay ${selectedCategory?.price}
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  if (isConfirmed) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <Alert className="mb-6">
+          <CheckCircle className="w-4 h-4" />
+          <AlertTitle>Booking Confirmed!</AlertTitle>
+          <AlertDescription>
+            Check your email for session details and Google Meet link.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Book a Mentoring Session</CardTitle>
+          <CardDescription>Complete the steps below to schedule your session</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="mb-8">
+            <div className="flex items-center justify-between max-w-xs mx-auto">
+              {[1, 2, 3, 4].map((stepNumber) => (
+                <div
+                  key={stepNumber}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    step >= stepNumber ? 'bg-blue-500 text-white' : 'bg-gray-200'
+                  }`}
+                >
+                  {stepNumber}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {renderStep()}
+
+          <div className="mt-8 flex justify-between">
+            {step > 1 && (
+              <Button variant="outline" onClick={() => setStep(step - 1)}>
+                Previous
+              </Button>
+            )}
+            {step < 4 ? (
+              <Button
+                className={step === 1 ? 'w-full' : 'ml-auto'}
+                onClick={() => setStep(step + 1)}
+                disabled={
+                  (step === 1 && !selectedCategory) ||
+                  (step === 2 && !selectedMentor) ||
+                  (step === 3 && (!selectedDate || !selectedTime))
+                }
+              >
+                Next
+              </Button>
+            ) : null}
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default SessionBooking;

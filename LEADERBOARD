@@ -1,0 +1,153 @@
+import React from 'react';
+import { Trophy, Medal, Award } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+
+const leaderboardData = [
+  { 
+    id: 1, 
+    name: 'Sarah Johnson', 
+    points: 2840, 
+    tasksCompleted: 156,
+    streak: 23,
+    avatar: '/api/placeholder/40/40'
+  },
+  { 
+    id: 2, 
+    name: 'Michael Chen', 
+    points: 2650, 
+    tasksCompleted: 142,
+    streak: 18,
+    avatar: '/api/placeholder/40/40'
+  },
+  { 
+    id: 3, 
+    name: 'Emma Davis', 
+    points: 2470, 
+    tasksCompleted: 134,
+    streak: 15,
+    avatar: '/api/placeholder/40/40'
+  },
+  { 
+    id: 4, 
+    name: 'James Wilson', 
+    points: 2320, 
+    tasksCompleted: 128,
+    streak: 12,
+    avatar: '/api/placeholder/40/40'
+  },
+  { 
+    id: 5, 
+    name: 'Lisa Anderson', 
+    points: 2180, 
+    tasksCompleted: 119,
+    streak: 9,
+    avatar: '/api/placeholder/40/40'
+  }
+];
+
+const getRankIcon = (rank) => {
+  switch(rank) {
+    case 1:
+      return <Trophy className="h-6 w-6 text-yellow-400" />;
+    case 2:
+      return <Medal className="h-6 w-6 text-gray-400" />;
+    case 3:
+      return <Award className="h-6 w-6 text-orange-400" />;
+    default:
+      return <span className="text-gray-500 font-medium">{rank}</span>;
+  }
+};
+
+const Leaderboard = () => {
+  return (
+    <Card className="max-w-3xl mx-auto">
+      <CardHeader>
+        <CardTitle className="text-center">Top Achievers</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-6">
+          {/* Top 3 Winners */}
+          <div className="flex justify-center items-end space-x-4 mb-8">
+            {/* Second Place */}
+            <div className="text-center">
+              <div className="w-20 h-28 bg-gray-100 rounded-t-lg relative flex items-end">
+                <img
+                  src={leaderboardData[1].avatar}
+                  alt={leaderboardData[1].name}
+                  className="w-12 h-12 rounded-full absolute top-4 left-1/2 transform -translate-x-1/2"
+                />
+                <div className="w-full bg-gray-200 h-20"></div>
+              </div>
+              <Medal className="h-8 w-8 text-gray-400 mx-auto mt-2" />
+              <p className="text-sm font-medium mt-1">{leaderboardData[1].name}</p>
+              <p className="text-sm text-gray-500">{leaderboardData[1].points} pts</p>
+            </div>
+
+            {/* First Place */}
+            <div className="text-center">
+              <div className="w-24 h-32 bg-blue-100 rounded-t-lg relative flex items-end">
+                <img
+                  src={leaderboardData[0].avatar}
+                  alt={leaderboardData[0].name}
+                  className="w-14 h-14 rounded-full absolute top-4 left-1/2 transform -translate-x-1/2"
+                />
+                <div className="w-full bg-blue-200 h-24"></div>
+              </div>
+              <Trophy className="h-10 w-10 text-yellow-400 mx-auto mt-2" />
+              <p className="text-sm font-medium mt-1">{leaderboardData[0].name}</p>
+              <p className="text-sm text-gray-500">{leaderboardData[0].points} pts</p>
+            </div>
+
+            {/* Third Place */}
+            <div className="text-center">
+              <div className="w-20 h-24 bg-gray-100 rounded-t-lg relative flex items-end">
+                <img
+                  src={leaderboardData[2].avatar}
+                  alt={leaderboardData[2].name}
+                  className="w-12 h-12 rounded-full absolute top-4 left-1/2 transform -translate-x-1/2"
+                />
+                <div className="w-full bg-gray-200 h-16"></div>
+              </div>
+              <Award className="h-8 w-8 text-orange-400 mx-auto mt-2" />
+              <p className="text-sm font-medium mt-1">{leaderboardData[2].name}</p>
+              <p className="text-sm text-gray-500">{leaderboardData[2].points} pts</p>
+            </div>
+          </div>
+
+          {/* Full Leaderboard */}
+          <div className="space-y-4">
+            {leaderboardData.map((user, index) => (
+              <div 
+                key={user.id}
+                className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 hover:shadow-md transition-shadow"
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="w-8 flex justify-center">
+                    {getRankIcon(index + 1)}
+                  </div>
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <div>
+                    <p className="font-medium">{user.name}</p>
+                    <p className="text-sm text-gray-500">
+                      {user.tasksCompleted} tasks · {user.streak} day streak
+                    </p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="font-bold text-blue-600">{user.points}</p>
+                  <p className="text-sm text-gray-500">points</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default Leaderboard;

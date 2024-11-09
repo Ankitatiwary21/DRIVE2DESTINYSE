@@ -1,0 +1,165 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Calendar, Bell, Settings, LogOut, Plus, Edit2, Trash2, Search, Home, User } from 'lucide-react';
+
+const TodaysGoalsPage = () => {
+  const [tasks, setTasks] = useState([
+    { id: 1, title: 'Complete project proposal', priority: 'High', dueDate: '2024-11-10', status: 'In Progress', progress: 50 },
+    { id: 2, title: 'Review team updates', priority: 'Medium', dueDate: '2024-11-10', status: 'Not Started', progress: 0 }
+  ]);
+
+  const [notes, setNotes] = useState([
+    { id: 1, content: 'Remember to follow up with team about deadline changes' }
+  ]);
+
+  const overallProgress = Math.round(
+    (tasks.reduce((acc, task) => acc + task.progress, 0) / (tasks.length * 100)) * 100
+  );
+
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-blue-500 to-green-500">
+      {/* Header */}
+      <header className="bg-white/90 shadow-md p-4">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-2">
+            <span className="text-xl font-bold">Drive2Destiny</span>
+          </div>
+          <nav className="flex gap-4">
+            <Button variant="ghost" className="flex items-center gap-2">
+              <Home size={20} />
+              Home
+            </Button>
+            <Button variant="ghost" className="flex items-center gap-2">
+              <User size={20} />
+              Profile
+            </Button>
+            <Button variant="ghost" className="flex items-center gap-2">
+              <Settings size={20} />
+              Settings
+            </Button>
+            <Button variant="ghost" className="flex items-center gap-2">
+              <LogOut size={20} />
+              Logout
+            </Button>
+          </nav>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto p-6">
+        {/* Inspiration Quote */}
+        <div className="text-center text-white text-2xl font-semibold mb-8">
+          "Today is your day to shine!"
+        </div>
+
+        {/* Progress Overview */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Today's Progress</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Progress value={overallProgress} className="h-4" />
+            <div className="text-center mt-2">{overallProgress}% Complete</div>
+          </CardContent>
+        </Card>
+
+        {/* Task Management */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Tasks Section */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Tasks</CardTitle>
+              <Button className="bg-yellow-500 hover:bg-yellow-600">
+                <Plus className="mr-2" size={16} />
+                Add Task
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {tasks.map(task => (
+                  <div key={task.id} className="bg-white p-4 rounded-lg shadow">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-semibold">{task.title}</h3>
+                      <div className="flex gap-2">
+                        <Button variant="ghost" size="sm">
+                          <Edit2 size={16} />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="text-sm text-gray-600">
+                      Priority: {task.priority} | Due: {task.dueDate}
+                    </div>
+                    <Progress value={task.progress} className="mt-2 h-2" />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Notes Section */}
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle>Notes</CardTitle>
+              <Button className="bg-yellow-500 hover:bg-yellow-600">
+                <Plus className="mr-2" size={16} />
+                Add Note
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {notes.map(note => (
+                  <div key={note.id} className="bg-white p-4 rounded-lg shadow">
+                    <div className="flex items-center justify-between mb-2">
+                      <p>{note.content}</p>
+                      <div className="flex gap-2">
+                        <Button variant="ghost" size="sm">
+                          <Edit2 size={16} />
+                        </Button>
+                        <Button variant="ghost" size="sm">
+                          <Trash2 size={16} />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="bg-white/90 mt-12 py-6">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-600">
+            <div>
+              <h4 className="font-semibold mb-2">Contact Us</h4>
+              <p>Phone: (620) 203-4560</p>
+              <p>Hours: Mon-Fri, 9 AM - 9 PM</p>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-2">Quick Links</h4>
+              <div className="space-y-1">
+                <p>Privacy Policy</p>
+                <p>Terms of Service</p>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-semibold mb-2">Follow Us</h4>
+              <div className="flex gap-4">
+                {/* Add social media icons here */}
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default TodaysGoalsPage;

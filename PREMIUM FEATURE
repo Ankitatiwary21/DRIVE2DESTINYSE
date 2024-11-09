@@ -1,0 +1,44 @@
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { Users, FileBarChart, Headphones, Star, ChevronRight, Clock, Calendar, BarChart3 } from 'lucide-react';
+
+// ... (previous code remains the same until the Custom Reports section)
+
+const PremiumFeatures = () => {
+  const [selectedPlan] = useState('yearly');
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-8">
+      {/* ... (previous code remains the same until the Custom Reports section) */}
+      
+      {/* In the Custom Reports section, use BarChart3 for all chart icons: */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold">Available Report Types</h3>
+        </div>
+        {[
+          'Team Performance Analysis',
+          'Project Timeline Report',
+          'Resource Allocation Summary',
+          'Productivity Metrics',
+          'Custom KPI Dashboard'
+        ].map((report, index) => (
+          <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div className="flex items-center gap-3">
+              <BarChart3 className="text-blue-600" />
+              <span>{report}</span>
+            </div>
+            <ChevronRight className="text-gray-400" />
+          </div>
+        ))}
+      </div>
+
+      {/* ... (rest of the code remains exactly the same) */}
+    </div>
+  );
+};
+
+export default PremiumFeatures;
+
+Version 3 of 3
